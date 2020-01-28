@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Hello World</title>
+  <script src="/js/pixi.min.js"> </script>
+  <style>
+    * {
+      padding: 0;
+      margin: 0
+    }
+  </style>
+</head>
+
+<body>
+  <script type="text/javascript">
+
+    let Application = PIXI.Application,
+      loader = PIXI.loader,
+      resources = PIXI.loader.resources,
+      Sprite = PIXI.Sprite,
+      Rectangle = PIXI.Rectangle,
+      TextureCache = PIXI.utils.TextureCache;
+
+    let app = new Application({
+      width: 512,
+      height: 512,
+      antialias: true,
+      transparent: false,
+      resolution: 1
+    });
+
+    document.body.appendChild(app.view);
+
+    loader
+      .add("images/treasureHunter.json")
+      .load(setup);
+
+    let dungeon, explorer, treasure, id, door;
+
+    function setup() {
+      let dungeonTexture = TextureCache["dungeon.png"];
+      dungeon = new Sprite(dungeonTexture);
+      app.stage.addChild(dungeon);
+
+      explorer = new Sprite(
+        resources["images/treasureHunter.json"].textures["explorer.png"]
+      );
+      explorer.x = 68;
+      explorer.y = app.stage.height / 2 - explorer.height / 2;
+      app.stage.addChild(explorer);
+
+      id = PIXI.loader.resources["images/treasureHunter.json"].textures;
+      treasure = new Sprite(id["treasure.png"]);
+      app.stage.addChild(treasure);
+
+      treasure.x = app.stage.width - treasure.width - 48;
+      treasure.y = app.stage.height / 2 - treasure.height / 2;
+      app.stage.addChild(treasure);
+
+      door = new Sprite(id["door.png"]);
+      door.position.set(32, 0);
+      app.stage.addChild(door);
+
+      let numberOfBlobs = 6,
+        spacing = 48,
+        xOffset = 150;
+
+      for (let i = 0; i < numberOfBlobs; i++) {
+
+        let blob = new Sprite(id["blob.png"]);
+
+        let x = spacing * i + xOffset;
+
+        let y = randomInt(0, app.stage.height - blob.height);
+
+        blob.x = x;
+        blob.y = y;
+
+        app.stage.addChild(blob);
+      }
+
+    }
+
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+  </script>
+</body>
+
+</html>
